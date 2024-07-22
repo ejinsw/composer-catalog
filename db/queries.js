@@ -1,5 +1,16 @@
 const pool = require('./pool')
 
+async function getComposersCount() {
+    try {
+        const result = await pool.query("SELECT count(*) FROM composers")
+        console.log(result)
+        return result.rows[0].count;
+    } catch (error) {
+        console.log("Error executing query", error);
+        throw error;
+    }
+}
+
 async function getAllComposerNames() {
     try {
         const result = await pool.query("SELECT first_name, last_name, id FROM composers")
@@ -20,9 +31,50 @@ async function getComposerDetail(composerId) {
     }
 }
 
+
 async function getComposerPieces(composerId) {
     try {
         const result = await pool.query("SELECT * FROM pieces WHERE composer_id = ($1);", [composerId])
+        return result.rows;
+    } catch (error) {
+        console.log("Error executing query", error);
+        throw error;
+    }
+}
+
+async function addComposer(firstName, lastName, bio, dob, dod, era) {
+    try {
+        pool.query("INSERT INTO composers (first_name, last_name, bio, birth_date, death_date, era) VALUES (($1), ($2), ($3), ($4), ($5), ($6));", [firstName, lastName, bio, dob, dod, era])
+    } catch (error) {
+        console.log("Error adding composer", error)
+        throw error
+    }
+}
+
+async function deleteComposer(id) {
+    try {
+        await pool.query("DELETE FROM pieces WHERE composer_id = ($1)", [id])
+        await pool.query("DELETE FROM composers WHERE id = ($1)", [id])
+    } catch (error) {
+        console.log("Error adding composer", error)
+        throw error
+    }
+}
+
+async function getPieceCount() {
+    try {
+        const result = await pool.query("SELECT count(*) FROM pieces")
+        console.log(result)
+        return result.rows[0].count;
+    } catch (error) {
+        console.log("Error executing query", error);
+        throw error;
+    }
+}
+
+async function getAllPieceNames() {
+    try {
+        const result = await pool.query("SELECT title, composer_id, id FROM pieces")
         return result.rows;
     } catch (error) {
         console.log("Error executing query", error);
@@ -40,10 +92,35 @@ async function getPieceDetail(pieceId) {
     }
 }
 
+async function addPiece(title, composer_id, composition_date, era, description) {
+    try {
+        pool.query("INSERT INTO pieces (title, composer_id, composition_date, era, description) VALUES (($1), ($2), ($3), ($4), ($5));", [title, composer_id, composition_date, era, description])
+    } catch (error) {
+        console.log("Error adding piece", error)
+        throw error
+    }
+}
+
+async function deletePiece(id) {
+    try {
+        await pool.query("DELETE FROM pieces WHERE id = ($1)", [id])
+    } catch (error) {
+        console.log("Error deleting piece", error)
+        throw error
+    }
+}
+
 
 module.exports = {
+    getComposersCount,
     getAllComposerNames,
     getComposerDetail,
     getComposerPieces,
-    getPieceDetail
+    getPieceCount,
+    getAllPieceNames,
+    getPieceDetail,
+    addComposer,
+    deleteComposer,
+    addPiece,
+    deletePiece
 }

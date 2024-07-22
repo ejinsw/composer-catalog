@@ -8,3 +8,9 @@
   <p><%= `Era: ${piece.era}` %></p>
 </span>
 <p><%= piece.description %></p>
+
+<form action="/pieces/delete" method="POST">
+  <input type="hidden" name="id" value="<%= piece.id %>">
+  <button type="submit">Delete</button>
+  <small>*This permanently deletes the current piece</small>
+</form>

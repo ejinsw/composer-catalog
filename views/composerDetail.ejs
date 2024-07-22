@@ -8,7 +8,15 @@
 <ul>
   <% for(let i = 0; i < pieces.length; i++) { %>
   <li>
-    <a href="<%= `${composer.id}/pieces/${pieces[i].id}` %>"><%= pieces[i].title %> </a>
+    <a href="<%= `${composer.id}/pieces/${pieces[i].id}` %>"
+      ><%= pieces[i].title %>
+    </a>
   </li>
   <% } %>
 </ul>
+
+<form action="/composers/delete" method="POST">
+  <input type="hidden" name="composer_id" value="<%= composer.id %>">
+  <button type="submit">Delete</button>
+  <small>*This permanently deletes the composer and all their corresponding pieces</small>
+</form>
