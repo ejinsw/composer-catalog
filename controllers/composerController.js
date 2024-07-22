@@ -19,12 +19,14 @@ exports.composerList = asyncHandler(async (req, res, next) => {
 exports.composerDetail = asyncHandler(async (req, res, next) => {
     const composers = await queries.getComposerDetail(req.params.id);
     const pieces = await queries.getComposerPieces(req.params.id);
-
+    
+    const birth_date = DateTime.fromJSDate(composers[0].birth_date).toFormat("yyyy-MM-dd")
+    const death_date = DateTime.fromJSDate(composers[0].death_date).toFormat("yyyy-MM-dd")
 
     composers[0].birth_date = DateTime.fromJSDate(composers[0].birth_date).toLocaleString(DateTime.DATE_MED)
     composers[0].death_date = DateTime.fromJSDate(composers[0].death_date).toLocaleString(DateTime.DATE_MED)
 
-    res.render('layout', { title: 'Composers Catalog', content: 'composerDetail', composer: composers[0], pieces: pieces });
+    res.render('layout', { title: 'Composers Catalog', content: 'composerDetail', composer: composers[0], pieces: pieces, birthDate: birth_date, deathDate: death_date });
 })
 
 exports.addComposer = asyncHandler(async (req, res, next) => {
@@ -46,4 +48,18 @@ exports.deleteComposer = asyncHandler(async (req, res, next) => {
     await queries.deleteComposer(id)
     
     res.redirect('/composers')
+})
+
+exports.updateComposer = asyncHandler(async (req, res, next) => {
+    const firstName = req.body.first_name;
+    const lastName = req.body.last_name;
+    const bio = req.body.bio;
+    const birthDate = req.body.birth_date;
+    const deathDate = req.body.death_date;
+    const era = req.body.era;
+    const id = req.body.id;
+
+    await queries.updateComposer(firstName, lastName, bio, birthDate, deathDate, era, id);
+
+    res.redirect('/composers/' + id);
 })

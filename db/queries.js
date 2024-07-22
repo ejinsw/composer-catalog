@@ -61,6 +61,15 @@ async function deleteComposer(id) {
     }
 }
 
+async function updateComposer(firstName, lastName, bio, dob, dod, era, id) {
+    try {
+        pool.query("UPDATE composers SET first_name = ($1), last_name = ($2), bio = ($3), birth_date = ($4), death_date = ($5), era = ($6) WHERE id = ($7);", [firstName, lastName, bio, dob, dod, era, id])
+    } catch (error) {
+        console.log("Error adding composer", error)
+        throw error
+    }
+}
+
 async function getPieceCount() {
     try {
         const result = await pool.query("SELECT count(*) FROM pieces")
@@ -110,6 +119,14 @@ async function deletePiece(id) {
     }
 }
 
+async function updatePiece(title, composer_id, composition_date, era, description, id) {
+    try {
+        pool.query("UPDATE pieces SET title = ($1), composer_id = ($2), composition_date = ($3), era = ($4), description = ($5) WHERE id = ($6);", [title, composer_id, composition_date, era, description, id])
+    } catch (error) {
+        console.log("Error adding composer", error)
+        throw error
+    }
+}
 
 module.exports = {
     getComposersCount,
@@ -122,5 +139,7 @@ module.exports = {
     addComposer,
     deleteComposer,
     addPiece,
-    deletePiece
+    deletePiece,
+    updateComposer,
+    updatePiece
 }

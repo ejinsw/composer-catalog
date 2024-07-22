@@ -10,12 +10,15 @@ exports.pieceList = asyncHandler(async (req, res, next) => {
 })
 
 exports.pieceDetail = asyncHandler(async (req, res, next) => {
+    const composers = await queries.getAllComposerNames()
     const composer = await queries.getComposerDetail(req.params.composer_id)
     const piece = await queries.getPieceDetail(req.params.piece_id)
 
+    const composition_date = DateTime.fromJSDate(piece[0].composition_date).toFormat("yyyy-MM-dd")
+
     piece[0].composition_date = DateTime.fromJSDate(piece[0].composition_date).toLocaleString(DateTime.DATE_MED)
 
-    res.render('layout', { title: 'Composer Catalog', content: 'pieceDetail', piece: piece[0], composer: composer[0] })
+    res.render('layout', { title: 'Composer Catalog', content: 'pieceDetail', piece: piece[0], composer: composer[0], composers: composers, compositionDate: composition_date})
 })
 
 exports.addPiece = asyncHandler(async (req, res, next) => {
@@ -36,4 +39,17 @@ exports.deletePiece = asyncHandler(async (req, res, next) => {
     await queries.deletePiece(id)
     
     res.redirect('/pieces')
+})
+
+exports.updatePiece = asyncHandler(async (req, res, next) => {
+    const title = req.body.title;
+    const composer_id = req.body.composer_id;
+    const composition_date = req.body.composition_date;
+    const description = req.body.description;
+    const era = req.body.era;
+    const id = req.body.id
+
+    await queries.updatePiece(title, composer_id, composition_date, era, description, id);
+
+    res.redirect(`/composers/${composer_id}/pieces/${id}`);
 })

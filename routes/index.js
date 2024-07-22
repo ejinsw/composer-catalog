@@ -10,6 +10,7 @@ router.get('/', composerController.index);
 router.get('/composers', composerController.composerList);
 router.post('/composers/add', composerController.addComposer)
 router.post('/composers/delete', composerController.deleteComposer)
+router.post('/composers/update', composerController.updateComposer)
 
 router.get('/composers/:id', composerController.composerDetail);
 
@@ -18,5 +19,6 @@ router.get('/composers/:composer_id/pieces/:piece_id', pieceController.pieceDeta
 router.get('/pieces', pieceController.pieceList)
 router.post('/pieces/add', pieceController.addPiece)
 router.post('/pieces/delete', pieceController.deletePiece)
+router.post('/pieces/update', pieceController.updatePiece)
 
 module.exports = router;

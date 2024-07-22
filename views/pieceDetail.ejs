@@ -1,16 +1,130 @@
-<h1><%= piece.title %></h1>
-<p>
-  Composer: 
-  <a href="<%= "/composers/" + composer.id %>"><%= `${composer.first_name} ${composer.last_name}` %></a>
-</p>
-<span>
-  <p><%= `${piece.composition_date}` %></p>
-  <p><%= `Era: ${piece.era}` %></p>
-</span>
-<p><%= piece.description %></p>
+<div class="modal-header">
+  <h1><%= piece.title %></h1>
+  <button
+    type="button"
+    class="btn btn-primary"
+    data-toggle="modal"
+    data-target="#editorModal"
+  >
+    Edit
+  </button>
+</div>
 
-<form action="/pieces/delete" method="POST">
-  <input type="hidden" name="id" value="<%= piece.id %>">
-  <button type="submit">Delete</button>
-  <small>*This permanently deletes the current piece</small>
-</form>
+<div class="modal-body">
+  <p>
+    Composer: 
+    <a href="<%= "/composers/" + composer.id %>">
+      <%= `${composer.first_name} ${composer.last_name}` %>
+    </a>
+  </p>
+  <p><%= `${piece.composition_date}` %></p>
+  <p>Era: <%= `${piece.era}` %></p>
+  <p><%= piece.description %></p>
+</div>
+
+<div class="modal-footer">
+  <form action="/pieces/delete" method="POST">
+    <input type="hidden" name="id" value="<%= piece.id %>">
+    <button type="submit">Delete</button>
+    <small>*This permanently deletes the current piece</small>
+  </form>
+</div>
+
+
+<!-- UPDATE -->
+<div
+  class="modal fade"
+  id="editorModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="editorModal"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          Edit <%= piece.title %>
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="/pieces/update">
+          <input type="hidden" name="id" value="<%= piece.id %>">
+
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" class="form-control" id="title" name="title" aria-describedby="title" placeholder="Enter title" value="<%= piece.title %>" required>
+          </div>
+
+          <label for="composer">Composer</label>
+          <input type="hidden" name="composer_id" id="composerId" value="<%= piece.composer_id %>" required>
+          <div class="dropdown" name="composer">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <%= composer.first_name + " " + composer.last_name %>
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <% for (let i = 0; i < composers.length; i++) { %>
+                <button class="dropdown-item" type="button" data-id="<%= composers[i].id %>" data-name="<%= `${composers[i].first_name} ${composers[i].last_name}` %>" onclick="selectComposer(this)">
+                  <%= `${composers[i].first_name} ${composers[i].last_name}` %>
+                </button>
+              <% } %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="composition_date">Composition Date</label>
+            <input type="date" class="form-control" id="composition_date" name="composition_date" aria-describedby="date of composition" value="<%= compositionDate %>" required>
+          </div>
+          <div class="form-group">
+            <label for="era">Era</label>
+            <input type="text" class="form-control" id="era" name="era" aria-describedby="era" placeholder="Enter era" value="<%= piece.era %>" required>
+          </div>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea class="form-control" id="description" name="description" rows="3" required><%= piece.description %></textarea>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function selectComposer(element) {
+    // Remove the 'active' class from all dropdown items
+    const items = document.querySelectorAll('.dropdown-item');
+    items.forEach(item => item.classList.remove('active'));
+
+    // Add the 'active' class to the clicked item
+    element.classList.add('active');
+
+    // Update the hidden input value
+    const composerId = element.getAttribute('data-id');
+    document.getElementById('composerId').value = composerId;
+
+    // Update the dropdown button text
+    const composerName = element.getAttribute('data-name');
+    document.getElementById('dropdownMenuButton').textContent = composerName;
+
+    // Submit the form
+    document.getElementById('composerForm').submit();
+  }
+</script>
