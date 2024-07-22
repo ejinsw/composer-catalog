@@ -1,0 +1,10 @@
+<h1><%= piece.title %></h1>
+<p>
+  Composer: 
+  <a href="<%= "/composers/" + composer.id %>"><%= `${composer.first_name} ${composer.last_name}` %></a>
+</p>
+<span>
+  <p><%= `${piece.composition_date}` %></p>
+  <p><%= `Era: ${piece.era}` %></p>
+</span>
+<p><%= piece.description %></p>

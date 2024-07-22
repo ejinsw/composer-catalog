@@ -1,0 +1,9 @@
+<ul>
+  <% for (let i = 0; i < composers.length; i++) { %>
+  <li>
+    <a href="<%= "/composers/" + composers[i].id %>"
+      ><%= `${composers[i].first_name} ${composers[i].last_name}` %></a
+    >
+  </li>
+  <% } %>
+</ul>

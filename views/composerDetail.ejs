@@ -1,0 +1,14 @@
+<h1><%= `${composer.first_name} ${composer.last_name}` %></h1>
+<span>
+  <p><%= `${composer.birth_date} - ${composer.death_date}` %></p>
+  <p><%= `Era: ${composer.era}` %></p>
+</span>
+<p><%= composer.bio %></p>
+
+<ul>
+  <% for(let i = 0; i < pieces.length; i++) { %>
+  <li>
+    <a href="<%= `${composer.id}/pieces/${pieces[i].id}` %>"><%= pieces[i].title %> </a>
+  </li>
+  <% } %>
+</ul>
