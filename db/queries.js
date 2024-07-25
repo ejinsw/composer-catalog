@@ -112,7 +112,7 @@ async function addPiece(title, composer_id, composition_date, era, description) 
 
 async function deletePiece(id) {
     try {
-        await pool.query("DELETE FROM pieces WHERE id = ($1)", [id])
+        await pool.query("DELETE FROM pieces WHERE id = ($1);", [id])
     } catch (error) {
         console.log("Error deleting piece", error)
         throw error
